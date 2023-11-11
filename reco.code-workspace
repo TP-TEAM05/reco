@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "path": "backend"
+    },
+    {
+      "path": "car-integration"
+    },
+    {
+      "path": "decision-module"
+    },
+    {
+      "path": "frontend"
+    },
+  ]
+}
