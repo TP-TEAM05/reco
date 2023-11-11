@@ -1,0 +1,12 @@
+[submodule "backend"]
+	path = backend
+	url = git@github.com:ReCoFIIT/backend.git
+[submodule "decision-module"]
+	path = decision-module
+	url = git@github.com:ReCoFIIT/decision-module.git
+[submodule "car-integration"]
+	path = car-integration
+	url = git@github.com:ReCoFIIT/car-integration.git
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:ReCoFIIT/frontend.git
