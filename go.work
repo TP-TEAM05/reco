@@ -1,0 +1,8 @@
+go 1.21.4
+
+// necessary for opening multiple go projects at once in one IDE
+
+use (
+	./car-integration
+	./decision-module
+)
