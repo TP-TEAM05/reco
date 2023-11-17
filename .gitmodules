@@ -10,3 +10,6 @@
 [submodule "frontend"]
 	path = frontend
 	url = git@github.com:ReCoFIIT/frontend.git
+[submodule "car-simulator"]
+	path = car-simulator
+	url = https://github.com/ReCoFIIT/car-simulator.git
