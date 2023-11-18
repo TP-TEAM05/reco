@@ -39,6 +39,16 @@ services:
     depends_on:
       - timescaledb
 
+  car-simulator:
+    build:
+      context: ./car-simulator
+    links:
+      - car-integration
+    ports:
+      - "70:70"
+    depends_on:
+      - timescaledb
+
 
 volumes:
   timescaledb:
