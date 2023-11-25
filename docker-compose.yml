@@ -25,7 +25,12 @@ services:
     build:
       context: ./car-integration
     ports:
+    # DECISION MODULE
       - "6060:6060"
+    # BACKEND
+      - "5050:5050"
+    # CAR SIMULATOR
+      - "4040:4040"
     depends_on:
       - timescaledb
       
@@ -35,7 +40,8 @@ services:
     links:
       - car-integration
     ports:
-      - "60:60"
+      - "6061:6061"
+      - "5051:5051"
     depends_on:
       - timescaledb
 

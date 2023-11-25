@@ -3,6 +3,7 @@ go 1.21.4
 // necessary for opening multiple go projects at once in one IDE
 
 use (
+	./backend
 	./car-integration
 	./car-simulator
 	./decision-module
