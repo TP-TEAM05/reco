@@ -8,6 +8,11 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - timescaledb:/home/postgres/pgdata/data
+  
+  redis: 
+    image: redis:latest
+    ports:
+      - "6379:6379"
 
   backend:
     build:
@@ -20,6 +25,7 @@ services:
       - "5345:2345"
     depends_on:
       - timescaledb
+      - redis
 
   car-integration:
     build:
