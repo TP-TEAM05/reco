@@ -30,6 +30,9 @@ services:
   car-integration:
     build:
       context: ./car-integration
+      dockerfile: ../support/car-integration/Dockerfile
+    volumes:
+      - ./car-integration:/app
     ports:
     # DECISION MODULE
       - "6060:6060"
@@ -43,6 +46,9 @@ services:
   decision-module:
     build:
       context: ./decision-module
+      dockerfile: ../support/decision-module/Dockerfile
+    volumes:
+      - ./decision-module:/app
     links:
       - car-integration
     ports:
