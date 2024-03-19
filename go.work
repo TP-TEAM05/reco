@@ -1,6 +1,4 @@
-go 1.21.4
-
-// necessary for opening multiple go projects at once in one IDE
+go 1.22.0
 
 use (
 	./backend
