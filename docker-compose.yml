@@ -8,8 +8,8 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - timescaledb:/home/postgres/pgdata/data
-  
-  redis: 
+
+  redis:
     image: redis:latest
     ports:
       - "6379:6379"
@@ -34,15 +34,15 @@ services:
     volumes:
       - ./car-integration:/app
     ports:
-    # DECISION MODULE
+      # DECISION MODULE
       - "6060:6060"
-    # BACKEND
+      # BACKEND
       - "5050:5050"
-    # CAR SIMULATOR
-      - "4040:4040"
+      # CAR SIMULATOR
+      - "4040:4040/udp"
     depends_on:
       - timescaledb
-      
+
   decision-module:
     build:
       context: ./decision-module
@@ -66,7 +66,6 @@ services:
       - "70:70"
     depends_on:
       - timescaledb
-
 
 volumes:
   timescaledb:
