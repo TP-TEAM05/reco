@@ -5,4 +5,5 @@ use (
 	./car-integration
 	./car-simulator
 	./decision-module
+	./intgration-api
 )

@@ -13,3 +13,6 @@
 [submodule "car-simulator"]
 	path = car-simulator
 	url = git@github.com:ReCoFIIT/car-simulator.git
+[submodule "integration-api"]
+	path = integration-api
+	url = git@github.com:ReCoFIIT/integration-api.git
