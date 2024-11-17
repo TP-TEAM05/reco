@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  timescaledb:
+    image: timescale/timescaledb-ha:pg14-latest
+    env_file: .env.production
+    ports:
+      - "${POSTGRES_HOST_PORT}:${POSTGRES_CONTAINER_PORT}"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - timescaledb:/reco/postgres/pgdata/data
+volumes:
+  timescaledb:

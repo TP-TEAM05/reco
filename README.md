@@ -2,6 +2,25 @@
 
 `git clone --recursive --remote-submodules git@github.com:ReCoFIIT/reco.git`
 
+## Updating Integration API
+
+Go to `integration-api` and modify the structure of the API. Then push the changes to the `integration-api` repository.
+
+In Github Create a new release and tag it with the version number. The version number should be in the format `vX.Y.Z` where `X`, `Y`, and `Z` are integers.
+We are using [Semantic Versioning](https://semver.org/).
+
+In projects that use the `integration-api` update the package:
+
+```bash
+go get -u github.com/ReCoFIIT/integration-api@vX.Y.Z
+```
+
+Rebuild the project container
+
+```bash
+docker-compose up -d --build <project_name>
+```
+
 ## Using Golang private packages
 
 - Create a personal access token on GitHub
