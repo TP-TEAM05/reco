@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  car-simulator:
+    build:
+      context: ./car-simulator
+    links:
+      - car-integration
+    ports:
+      - "70:70"
+    depends_on:
+      - timescaledb
