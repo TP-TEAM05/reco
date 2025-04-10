@@ -16,3 +16,6 @@
 [submodule "integration-api"]
 	path = integration-api
 	url = git@github.com:ReCoFIIT/integration-api.git
+[submodule "documentation"]
+	path = documentation
+	url = git@github.com:ReCoFIIT/documentation.git

@@ -35,11 +35,13 @@ services:
       - ./car-integration:/app
     ports:
       # DECISION MODULE
-      - "6060:6060"
+      - "6060:6060/udp"
       # BACKEND
       - "5050:5050"
-      # CAR SIMULATOR
+      # CAR SIMULATOR / CAR MODELS CONNECTION
       - "4040:4040/udp"
+      # FREE PROCESSOR CONNECTION
+      - "4041:4041/udp"
     depends_on:
       - timescaledb
 

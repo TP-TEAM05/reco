@@ -18,5 +18,30 @@
     {
       "path": "integration-api"
     },
-  ]
+    {
+      "path": "documentation"
+    },
+  ],
+  "settings": {
+    "workbench.colorCustomizations": {
+      "activityBar.activeBackground": "#c06761",
+      "activityBar.background": "#c06761",
+      "activityBar.foreground": "#15202b",
+      "activityBar.inactiveForeground": "#15202b99",
+      "activityBarBadge.background": "#245b28",
+      "activityBarBadge.foreground": "#e7e7e7",
+      "commandCenter.border": "#e7e7e799",
+      "sash.hoverBorder": "#c06761",
+      "statusBar.background": "#aa4a44",
+      "statusBar.foreground": "#e7e7e7",
+      "statusBarItem.hoverBackground": "#c06761",
+      "statusBarItem.remoteBackground": "#aa4a44",
+      "statusBarItem.remoteForeground": "#e7e7e7",
+      "titleBar.activeBackground": "#aa4a44",
+      "titleBar.activeForeground": "#e7e7e7",
+      "titleBar.inactiveBackground": "#aa4a4499",
+      "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#AA4A44"
+  }
 }
