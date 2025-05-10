@@ -46,6 +46,9 @@ services:
     volumes: ["./car-integration:/app"]
     network_mode: "host" # access to host for access to car ip addresses
     depends_on: ["timescaledb"]
+    extra_hosts:
+      - "redis:127.0.0.1"
+      - "timescaledb:127.0.0.1"
 
 volumes:
   timescaledb:
