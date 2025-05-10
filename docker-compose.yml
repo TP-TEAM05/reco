@@ -1,63 +1,51 @@
 version: "3.8"
+
+x-car-integration-alias: &car-host-alias
+  # 172.20.0.1 is *always* the bridge-gateway IP seen
+  # from containers on Docker’s default network.
+  extra_hosts:
+    - "car-integration:172.20.0.1"
+
 services:
   timescaledb:
     image: timescale/timescaledb-ha:pg14-latest
-    ports:
-      - "5555:5432"
-    environment:
-      - POSTGRES_PASSWORD=postgres
+    ports: ["5555:5432"]
+    environment: ["POSTGRES_PASSWORD=postgres"]
     volumes:
       - timescaledb:/home/postgres/pgdata/data
+    <<: *car-host-alias
 
   redis:
     image: redis:latest
-    ports:
-      - "6379:6379"
+    ports: ["6379:6379"]
+    <<: *car-host-alias
 
   backend:
     build:
       context: ./backend
       dockerfile: ../support/backend/Dockerfile
-    volumes:
-      - ./backend:/app
-    ports:
-      - "5000:8080"
-      - "5345:2345"
-    depends_on:
-      - timescaledb
-      - redis
-
-  car-integration:
-    build:
-      context: ./car-integration
-      dockerfile: ../support/car-integration/Dockerfile
-    volumes:
-      - ./car-integration:/app
-    ports:
-      # DECISION MODULE
-      - "6060:6060/udp"
-      # BACKEND
-      - "5050:5050"
-      # CAR SIMULATOR / CAR MODELS CONNECTION
-      - "4040:4040/udp"
-      # FREE PROCESSOR CONNECTION
-      - "4041:4041/udp"
-    depends_on:
-      - timescaledb
+    volumes: ["./backend:/app"]
+    ports: ["5000:8080", "5345:2345"]
+    depends_on: ["timescaledb", "redis"]
+    <<: *car-host-alias
 
   decision-module:
     build:
       context: ./decision-module
       dockerfile: ../support/decision-module/Dockerfile
-    volumes:
-      - ./decision-module:/app
-    links:
-      - car-integration
-    ports:
-      - "6061:6061"
-      - "5051:5051"
-    depends_on:
-      - timescaledb
+    volumes: ["./decision-module:/app"]
+    links: ["car-integration"]
+    ports: ["6061:6061", "5051:5051"]
+    depends_on: ["timescaledb"]
+    <<: *car-host-alias
+
+  car-integration:
+    build:
+      context: ./car-integration
+      dockerfile: ../support/car-integration/Dockerfile
+    volumes: ["./car-integration:/app"]
+    network_mode: "host" # access to host for access to car ip addresses
+    depends_on: ["timescaledb"]
 
 volumes:
   timescaledb:
