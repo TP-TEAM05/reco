@@ -1,6 +1,6 @@
 # 🚗 ReCo Polyrepository ☁️
 
-`git clone --recursive --remote-submodules git@github.com:ReCoFIIT/reco.git`
+`git clone --recursive --remote-submodules git@github.com:TP-TEAM05/reco.git`
 
 ## Updating Integration API
 
@@ -12,7 +12,7 @@ We are using [Semantic Versioning](https://semver.org/).
 In projects that use the `integration-api` update the package:
 
 ```bash
-go get -u github.com/ReCoFIIT/integration-api@vX.Y.Z
+go get -u github.com/TP-TEAM05/integration-api@vX.Y.Z
 ```
 
 Rebuild the project container
@@ -27,13 +27,13 @@ docker-compose up -d --build <project_name>
 - Add the following to your `~/.bashrc` or `~/.zshrc`:
 
 ```bash
-export GOPRIVATE="github.com/ReCoFIIT"
+export GOPRIVATE="github.com/TP-TEAM05"
 ```
 
 If you have multiple private repositories, separate them with a comma:
 
 ```bash
-export GOPRIVATE="github.com/ReCoFIIT,github.com/your-other-repo"
+export GOPRIVATE="github.com/TP-TEAM05,github.com/your-other-repo"
 ```
 
 - Run `source ~/.bashrc` or `source ~/.zshrc`
