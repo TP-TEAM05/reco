@@ -2,8 +2,8 @@ x-car-integration-alias: &car-host-alias
   # 172.20.0.1 is *always* the bridge-gateway IP seen
   # from containers on Docker’s default network.
   extra_hosts:
-    # - "car-integration:172.20.0.1"
-    - "car-integration:host-gateway"
+    - "car-integration:172.20.0.1"
+    # - "car-integration:host-gateway"
 
 services:
   timescaledb:
