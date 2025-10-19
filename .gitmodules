@@ -1,21 +1,28 @@
 [submodule "backend"]
 	path = backend
 	url = git@github.com:TP-TEAM05/backend.git
+	branch = master
 [submodule "decision-module"]
 	path = decision-module
 	url = git@github.com:TP-TEAM05/decision-module.git
+	branch = master
 [submodule "car-integration"]
 	path = car-integration
 	url = git@github.com:TP-TEAM05/car-integration.git
+	branch = master
 [submodule "frontend"]
 	path = frontend
 	url = git@github.com:TP-TEAM05/frontend.git
+	branch = master
 [submodule "car-simulator"]
 	path = car-simulator
 	url = git@github.com:TP-TEAM05/car-simulator.git
+	branch = master
 [submodule "integration-api"]
 	path = integration-api
 	url = git@github.com:TP-TEAM05/integration-api.git
+	branch = master
 [submodule "documentation"]
 	path = documentation
 	url = git@github.com:TP-TEAM05/documentation.git
+	branch = master
