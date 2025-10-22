@@ -13,11 +13,15 @@ services:
     volumes:
       - timescaledb:/home/postgres/pgdata/data
     <<: *car-host-alias
+    networks:
+      - reco_default
 
   redis:
     image: redis:latest
     ports: ["6379:6379"]
     <<: *car-host-alias
+    networks:
+      - reco_default
 
   backend:
     build:
@@ -30,6 +34,8 @@ services:
       CAR_INTEGRATION_HOST: 172.18.0.1  # replace with your host IP
       CAR_INTEGRATION_PORT: 5050
     <<: *car-host-alias
+    networks:
+      - reco_default
 
   decision-module:
     build:
@@ -40,6 +46,8 @@ services:
     ports: ["6061:6061", "5051:5051"]
     depends_on: ["timescaledb"]
     <<: *car-host-alias
+    networks:
+      - reco_default
 
   car-integration:
     build:
@@ -59,3 +67,8 @@ services:
 
 volumes:
   timescaledb:
+
+networks:
+  reco_default:
+    name: reco_default
+    external: true
