@@ -1,8 +1,11 @@
+x-car-integration-ip: &CI 172.18.0.1
+
 x-car-integration-alias: &car-host-alias
   # 172.20.0.1 is *always* the bridge-gateway IP seen
   # from containers on Docker’s default network.
   extra_hosts:
-    - "car-integration:172.20.0.1"
+    # - "car-integration:172.20.0.1"
+    - "car-integration:172.18.0.1"
     # - "car-integration:host-gateway"
 
 services:
@@ -31,7 +34,7 @@ services:
     ports: ["5000:8080", "5345:2345"]
     depends_on: ["timescaledb", "redis"]
     environment:
-      CAR_INTEGRATION_HOST: 172.18.0.1  # replace with your host IP
+      CAR_INTEGRATION_HOST: *CI # 172.18.0.1  # replace with your host IP
       CAR_INTEGRATION_PORT: 5050
     <<: *car-host-alias
     networks:
@@ -45,6 +48,9 @@ services:
     links: ["car-integration"]
     ports: ["6061:6061", "5051:5051"]
     depends_on: ["timescaledb"]
+    environment:
+      CAR_INTEGRATION_HOST: *CI # 172.18.0.1  # replace with your host IP
+      CAR_INTEGRATION_PORT: 5050
     <<: *car-host-alias
     networks:
       - reco_default
@@ -56,6 +62,9 @@ services:
     volumes: ["./car-integration:/app"]
     network_mode: "host" # access to host for access to car ip addresses
     depends_on: ["timescaledb"]
+    environment:
+      CAR_INTEGRATION_HOST: *CI # 172.18.0.1  # replace with your host IP
+      CAR_INTEGRATION_PORT: 5050
     # extra_hosts:
     #   - "redis:127.0.0.1"
     #   - "timescaledb:127.0.0.1"
@@ -72,3 +81,27 @@ networks:
   reco_default:
     name: reco_default
     external: true
+
+# TODO skonzultovat chatovicu
+# DRY block
+# x-ci-env: &ci_env
+#   environment:
+#     CAR_INTEGRATION_HOST: ${CAR_INTEGRATION_HOST:-host.docker.internal}
+#     CAR_INTEGRATION_PORT: ${CAR_INTEGRATION_PORT:-5050}
+#   extra_hosts:
+#     - "host.docker.internal:host-gateway"  # makes it work on Linux/WSL too
+
+# services:
+#   backend:
+#     # ...
+#     <<: *ci_env
+#     networks: [reco_default]
+
+#   decision-module:
+#     # ...
+#     <<: *ci_env
+#     networks: [reco_default]
+
+#   car-integration:
+#     # ...
+#     network_mode: host
