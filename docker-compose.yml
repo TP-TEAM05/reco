@@ -16,6 +16,12 @@ services:
     volumes:
       - timescaledb:/home/postgres/pgdata/data
     <<: *car-host-alias
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -h localhost -p 5432 || exit 1"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
     networks:
       - reco_default
 
