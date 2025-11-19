@@ -1,11 +1,11 @@
-x-car-integration-ip: &CI 172.18.0.1
+x-car-integration-ip: &CI 172.18.0.5
 
 x-car-integration-alias: &car-host-alias
   # 172.20.0.1 is *always* the bridge-gateway IP seen
   # from containers on Docker’s default network.
   extra_hosts:
     # - "car-integration:172.20.0.1"
-    - "car-integration:172.18.0.1"
+    - "car-integration:172.18.0.5"
     # - "car-integration:host-gateway"
 
 services:
@@ -66,7 +66,7 @@ services:
       context: ./car-integration
       dockerfile: ../support/car-integration/Dockerfile
     volumes: ["./car-integration:/app"]
-    network_mode: "host" # access to host for access to car ip addresses
+    #network_mode: "host" # access to host for access to car ip addresses
     depends_on: ["timescaledb"]
     environment:
       CAR_INTEGRATION_HOST: *CI # 172.18.0.1  # replace with your host IP
@@ -74,11 +74,13 @@ services:
     # extra_hosts:
     #   - "redis:127.0.0.1"
     #   - "timescaledb:127.0.0.1"
-    # ports:
-    #   - "5050:5050/udp"
-    #   - "6060:6060/udp"
-    #   - "4040:4040/udp"
+    ports:
+     - "5050:5050"
+     - "6060:6060/udp"
+     - "4040:4040/udp"
     <<: *car-host-alias
+    networks:
+          - reco_default
 
 volumes:
   timescaledb:
