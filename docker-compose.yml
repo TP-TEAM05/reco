@@ -1,13 +1,3 @@
-x-car-integration-ip: &CI 172.18.0.5
-
-x-car-integration-alias: &car-host-alias
-  # 172.20.0.1 is *always* the bridge-gateway IP seen
-  # from containers on Docker’s default network.
-  extra_hosts:
-    # - "car-integration:172.20.0.1"
-    - "car-integration:172.18.0.5"
-    # - "car-integration:host-gateway"
-
 services:
   timescaledb:
     image: timescale/timescaledb-ha:pg14-latest
@@ -15,7 +5,6 @@ services:
     environment: ["POSTGRES_PASSWORD=postgres"]
     volumes:
       - timescaledb:/home/postgres/pgdata/data
-    <<: *car-host-alias
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -h localhost -p 5432 || exit 1"]
       interval: 2s
@@ -28,7 +17,6 @@ services:
   redis:
     image: redis:latest
     ports: ["6379:6379"]
-    <<: *car-host-alias
     networks:
       - reco_default
 
@@ -38,11 +26,10 @@ services:
       dockerfile: ../support/backend/Dockerfile
     volumes: ["./backend:/app"]
     ports: ["5000:8080", "5345:2345"]
-    depends_on: ["timescaledb", "redis"]
+    depends_on: ["timescaledb", "redis", "car-integration"]
     environment:
-      CAR_INTEGRATION_HOST: *CI # 172.18.0.1  # replace with your host IP
+      CAR_INTEGRATION_HOST: car-integration
       CAR_INTEGRATION_PORT: 5050
-    <<: *car-host-alias
     networks:
       - reco_default
 
@@ -53,11 +40,10 @@ services:
     volumes: ["./decision-module:/app"]
     links: ["car-integration"]
     ports: ["6061:6061", "5051:5051"]
-    depends_on: ["timescaledb"]
+    depends_on: ["timescaledb", "car-integration"]
     environment:
-      CAR_INTEGRATION_HOST: *CI # 172.18.0.1  # replace with your host IP
-      CAR_INTEGRATION_PORT: 5050
-    <<: *car-host-alias
+      CAR_INTEGRATION_HOST: car-integration
+      CAR_INTEGRATION_PORT: 6060
     networks:
       - reco_default
 
@@ -66,21 +52,18 @@ services:
       context: ./car-integration
       dockerfile: ../support/car-integration/Dockerfile
     volumes: ["./car-integration:/app"]
-    #network_mode: "host" # access to host for access to car ip addresses
-    depends_on: ["timescaledb"]
+    # Back on bridge network so other containers can reach it via service name
+    depends_on: ["timescaledb", "redis"]
     environment:
-      CAR_INTEGRATION_HOST: *CI # 172.18.0.1  # replace with your host IP
-      CAR_INTEGRATION_PORT: 5050
-    # extra_hosts:
-    #   - "redis:127.0.0.1"
-    #   - "timescaledb:127.0.0.1"
+      # On bridge network, services are reachable by their service names
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     ports:
-     - "5050:5050"
-     - "6060:6060/udp"
-     - "4040:4040/udp"
-    <<: *car-host-alias
+      - "5050:5050/udp"
+      - "6060:6060/udp"
+      - "4040:4040/udp"
     networks:
-          - reco_default
+      - reco_default
 
 volumes:
   timescaledb:
@@ -89,27 +72,3 @@ networks:
   reco_default:
     name: reco_default
     external: true
-
-# TODO skonzultovat chatovicu
-# DRY block
-# x-ci-env: &ci_env
-#   environment:
-#     CAR_INTEGRATION_HOST: ${CAR_INTEGRATION_HOST:-host.docker.internal}
-#     CAR_INTEGRATION_PORT: ${CAR_INTEGRATION_PORT:-5050}
-#   extra_hosts:
-#     - "host.docker.internal:host-gateway"  # makes it work on Linux/WSL too
-
-# services:
-#   backend:
-#     # ...
-#     <<: *ci_env
-#     networks: [reco_default]
-
-#   decision-module:
-#     # ...
-#     <<: *ci_env
-#     networks: [reco_default]
-
-#   car-integration:
-#     # ...
-#     network_mode: host
