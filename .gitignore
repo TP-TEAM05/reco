@@ -1,2 +1,4 @@
 .env
 .env.production
+CLAUDE.md
+.gitignore
