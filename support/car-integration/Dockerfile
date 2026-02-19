@@ -2,6 +2,8 @@ FROM golang:1.25.3-alpine
 
 WORKDIR /app
 
+RUN apk add --no-cache bash tcpdump iproute2 iputils busybox-extras
+
 RUN go install github.com/air-verse/air@latest
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
 
