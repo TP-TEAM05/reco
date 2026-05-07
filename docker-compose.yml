@@ -1,3 +1,9 @@
+x-car-integration-alias: &car-host-alias
+  # 172.20.0.1 is *always* the bridge-gateway IP seen
+  # from containers on Docker’s default network.
+  extra_hosts:
+    - "car-integration:172.20.0.1"
+
 services:
   timescaledb:
     image: timescale/timescaledb-ha:pg14-latest
@@ -5,20 +11,12 @@ services:
     environment: ["POSTGRES_PASSWORD=postgres"]
     volumes:
       - timescaledb:/home/postgres/pgdata/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -h localhost -p 5432 || exit 1"]
-      interval: 2s
-      timeout: 5s
-      retries: 30
-      start_period: 10s
-    networks:
-      - reco_default
+    <<: *car-host-alias
 
   redis:
     image: redis:latest
     ports: ["6379:6379"]
-    networks:
-      - reco_default
+    <<: *car-host-alias
 
   backend:
     build:
@@ -26,12 +24,8 @@ services:
       dockerfile: ../support/backend/Dockerfile
     volumes: ["./backend:/app"]
     ports: ["5000:8080", "5345:2345"]
-    depends_on: ["timescaledb", "redis", "car-integration"]
-    environment:
-      CAR_INTEGRATION_HOST: car-integration
-      CAR_INTEGRATION_PORT: 5050
-    networks:
-      - reco_default
+    depends_on: ["timescaledb", "redis"]
+    <<: *car-host-alias
 
   decision-module:
     build:
@@ -40,35 +34,25 @@ services:
     volumes: ["./decision-module:/app"]
     links: ["car-integration"]
     ports: ["6061:6061", "5051:5051"]
-    depends_on: ["timescaledb", "car-integration"]
-    environment:
-      CAR_INTEGRATION_HOST: car-integration
-      CAR_INTEGRATION_PORT: 6060
-    networks:
-      - reco_default
+    depends_on: ["timescaledb"]
+    <<: *car-host-alias
 
   car-integration:
     build:
       context: ./car-integration
       dockerfile: ../support/car-integration/Dockerfile
     volumes: ["./car-integration:/app"]
-    # Back on bridge network so other containers can reach it via service name
-    depends_on: ["timescaledb", "redis"]
-    environment:
-      # On bridge network, services are reachable by their service names
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-    ports:
-      - "5050:5050/udp"
-      - "6060:6060/udp"
-      - "4040:4040/udp"
-    networks:
-      - reco_default
+    network_mode: "host" # access to host for access to car ip addresses
+    depends_on: ["timescaledb"]
+    extra_hosts:
+      - "redis:127.0.0.1"
+      - "timescaledb:127.0.0.1"
 
 volumes:
   timescaledb:
 
 networks:
-  reco_default:
-    name: reco_default
-    external: true
+  default:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
